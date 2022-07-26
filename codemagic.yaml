@@ -20,7 +20,7 @@ workflows:
       - name: Build Android app
         script: |
           chmod +x gradlew
-         ./gradlew assembleRelease # To generate an .apk use--> ./gradlew assembleRelease
+         ./gradlew assembleRelease 
     artifacts:
       - app/build/outputs/**/**/*.aab
       - app/build/outputs/**/**/*.apk
