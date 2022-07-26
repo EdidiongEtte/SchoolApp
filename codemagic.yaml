@@ -1,7 +1,24 @@
 workflows:
-  android-app:
-    name: Android App
-  script: |
-          chmod +x gradlew assembleRelease
-  artifacts:
-      - build/outputs/**/**/*.apk
+  android-workflow:
+    name: Android Workflow
+    max_build_duration: 60
+    environment:
+      groups:
+        - keystore_credentials # Comment this out if you are using code-signing-identities <-- Includes - CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_PASSWORD, CM_KEY_ALIAS
+    scripts:
+      - name: Set up local properties
+        script: echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Set up key.properties file for code signing
+        script: |
+          echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
+          cat >> "$CM_BUILD_DIR/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=$CM_KEYSTORE_PATH
+          EOF
+      - name: Build Android app
+        script: ./gradlew bundleRelease # To generate an .apk use--> ./gradlew assembleRelease
+    artifacts:
+      - app/build/outputs/**/**/*.aab
+      - app/build/outputs/**/**/*.apk
