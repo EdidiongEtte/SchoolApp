@@ -19,8 +19,8 @@ workflows:
           EOF
       - name: Build Android app
         script: |
-        chmod +x gradlew
-        ./gradlew assembleRelease # To generate an .apk use--> ./gradlew assembleRelease
+          chmod +x gradlew
+         ./gradlew assembleRelease # To generate an .apk use--> ./gradlew assembleRelease
     artifacts:
       - app/build/outputs/**/**/*.aab
       - app/build/outputs/**/**/*.apk
